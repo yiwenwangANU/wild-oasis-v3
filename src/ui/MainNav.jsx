@@ -8,7 +8,7 @@ import {
   HiOutlineUsers,
 } from "react-icons/hi2";
 
-const NavList = styled.ul`
+const NavList = styled.nav`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
@@ -54,7 +54,40 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 function MainNav() {
-  return;
+  return (
+    <NavList>
+      <ul>
+        <StyledNavLink to="/">
+          <HiOutlineHome />
+          Home
+        </StyledNavLink>
+      </ul>
+      <ul>
+        <StyledNavLink to="/bookings">
+          <HiOutlineCalendarDays />
+          Bookings
+        </StyledNavLink>
+      </ul>
+      <ul>
+        <StyledNavLink to="/cabins">
+          <HiOutlineHomeModern />
+          Cabins
+        </StyledNavLink>
+      </ul>
+      <ul>
+        <StyledNavLink to="/users">
+          <HiOutlineUsers />
+          Users
+        </StyledNavLink>
+      </ul>
+      <ul>
+        <StyledNavLink to="/settings">
+          <HiOutlineCog6Tooth />
+          Settings
+        </StyledNavLink>
+      </ul>
+    </NavList>
+  );
 }
 
 export default MainNav;

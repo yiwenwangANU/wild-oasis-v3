@@ -14,6 +14,7 @@ import Users from "./pages/Users";
 import Login from "./pages/Login";
 import PageNotFound from "./pages/PageNotFound";
 
+import GlobalStyles from "./styles/GlobalStyles";
 function App() {
   const router = createBrowserRouter([
     {
@@ -60,7 +61,12 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <GlobalStyles />
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default App;
