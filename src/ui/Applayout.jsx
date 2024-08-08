@@ -6,28 +6,24 @@ import Hearder from "./Header";
 
 const StyledApplayout = styled.div`
   display: grid;
+  grid-template-rows: auto 1fr;
   grid-template-columns: 26rem 1fr;
   height: 100vh;
 `;
 
-const StyledContainer = styled.div`
-  display: grid;
-  grid-template-rows: auto 1fr;
-`;
-
 const StyledMain = styled.main`
   background-color: var(--color-grey-50);
+  padding: 4rem 20.8rem 6.4rem;
+  overflow: auto;
 `;
 function Applayout() {
   return (
     <StyledApplayout>
       <Sidebar />
-      <StyledContainer>
-        <Hearder />
-        <StyledMain>
-          <Outlet />
-        </StyledMain>
-      </StyledContainer>
+      <Hearder />
+      <StyledMain>
+        <Outlet />
+      </StyledMain>
     </StyledApplayout>
   );
 }

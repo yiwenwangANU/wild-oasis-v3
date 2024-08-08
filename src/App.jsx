@@ -3,6 +3,8 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import Applayout from "./ui/Applayout";
 import Dashboard from "./pages/Dashboard";
@@ -15,6 +17,10 @@ import Login from "./pages/Login";
 import PageNotFound from "./pages/PageNotFound";
 
 import GlobalStyles from "./styles/GlobalStyles";
+import { Toaster } from "react-hot-toast";
+
+const queryClient = new QueryClient();
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -62,10 +68,12 @@ function App() {
   ]);
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
+      <Toaster />
       <RouterProvider router={router} />
-    </>
+    </QueryClientProvider>
   );
 }
 
