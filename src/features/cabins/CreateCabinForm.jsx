@@ -5,6 +5,9 @@ import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
+import { useForm } from "react-hook-form";
+import useCreateCabin from "./useCreateCabin";
+import { useEffect } from "react";
 
 const FormRow = styled.div`
   display: grid;
@@ -43,44 +46,112 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm() {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const { createCabin, isCreating, isSuccess } = useCreateCabin();
+
+  const onSubmit = (data) => createCabin(data);
+
+  useEffect(() => {
+    reset();
+  }, [isSuccess, reset]);
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
-        <Input type="text" id="name" />
+        <Input
+          type="text"
+          id="name"
+          {...register("name", { required: true })}
+        />
+        {errors.name && <Error>This field is required</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="maxCapacity">Maximum capacity</Label>
-        <Input type="number" id="maxCapacity" />
+        <Input
+          type="number"
+          id="maxCapacity"
+          {...register("maxCapacity", { required: true, min: 0 })}
+        />
+        {errors.maxCapacity?.type === "required" && (
+          <Error>This field is required</Error>
+        )}
+        {errors.maxCapacity?.type === "min" && (
+          <Error>The minimum capacity should larger than 0</Error>
+        )}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="regularPrice">Regular price</Label>
-        <Input type="number" id="regularPrice" />
+        <Input
+          type="number"
+          id="regularPrice"
+          {...register("regularPrice", { required: true, min: 0 })}
+        />
+        {errors.regularPrice?.type === "required" && (
+          <Error>This field is required</Error>
+        )}
+        {errors.regularPrice?.type === "min" && (
+          <Error>The minimum price should larger than 0</Error>
+        )}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="discount">Discount</Label>
-        <Input type="number" id="discount" defaultValue={0} />
+        <Input
+          type="number"
+          id="discount"
+          defaultValue={0}
+          {...register("discount", {
+            required: true,
+            validate: (value) => +value <= +getValues("regularPrice"),
+          })}
+        />
+        {errors.discount?.type === "required" && (
+          <Error>This field is required</Error>
+        )}
+        {errors.discount?.type === "validate" && (
+          <Error>Discount should not large than the price</Error>
+        )}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="description">Description for website</Label>
-        <Textarea type="number" id="description" defaultValue="" />
+        <Textarea
+          type="number"
+          id="description"
+          defaultValue=""
+          {...register("description", { required: true })}
+        />
+        {errors.description && <Error>This field is required</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          type="file"
+          {...register("image", { required: true })}
+        />
+        {errors.image && <Error>Cabin image is required</Error>}
       </FormRow>
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button $variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button>Edit cabin</Button>
+        <Button type="submit" disabled={isCreating}>
+          Add cabin
+        </Button>
       </FormRow>
     </Form>
   );
