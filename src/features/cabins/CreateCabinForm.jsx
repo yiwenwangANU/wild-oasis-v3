@@ -8,6 +8,7 @@ import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
 import useCreateCabin from "./useCreateCabin";
 import { useEffect } from "react";
+import useEditCabin from "./useEditCabin";
 
 const FormRow = styled.div`
   display: grid;
@@ -45,21 +46,34 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm() {
+function CreateCabinForm({ cabin = {}, handleCloseForm }) {
+  const editMode =
+    Object.keys(cabin).length !== 0 || cabin.constructor !== Object;
+
   const {
     register,
     handleSubmit,
     getValues,
     reset,
     formState: { errors },
-  } = useForm();
-  const { createCabin, isCreating, isSuccess } = useCreateCabin();
+  } = useForm({ defaultValues: cabin });
 
-  const onSubmit = (data) => createCabin(data);
+  const { createCabin, isCreating, createSuccess } = useCreateCabin();
+  const { editCabin, isEditing, editSuccess } = useEditCabin();
+
+  let onSubmit;
+  if (!editMode) {
+    onSubmit = (data) => createCabin(data);
+  } else {
+    onSubmit = (data) => editCabin(data);
+  }
 
   useEffect(() => {
-    reset();
-  }, [isSuccess, reset]);
+    if (createSuccess || editSuccess) {
+      reset();
+      handleCloseForm();
+    }
+  }, [createSuccess, editSuccess, reset, handleCloseForm]);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -139,18 +153,23 @@ function CreateCabinForm() {
           id="image"
           accept="image/*"
           type="file"
-          {...register("image", { required: true })}
+          {...register("image", { required: !editMode })}
         />
         {errors.image && <Error>Cabin image is required</Error>}
       </FormRow>
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button $variation="secondary" type="reset">
+        <Button
+          $variation="secondary"
+          type="reset"
+          disabled={isCreating || isEditing}
+          onClick={() => handleCloseForm()}
+        >
           Cancel
         </Button>
-        <Button type="submit" disabled={isCreating}>
-          Add cabin
+        <Button type="submit" disabled={isCreating || isEditing}>
+          {editMode ? "Update Cabin" : "Add Cabin"}
         </Button>
       </FormRow>
     </Form>

@@ -12,6 +12,7 @@ const StyledCabins = styled.div`
 `;
 function Cabins() {
   const [showCreateCabinForm, setShowCreateCabinForm] = useState(false);
+  const handleCloseForm = () => setShowCreateCabinForm(false);
   return (
     <>
       <StyledCabins>
@@ -26,7 +27,9 @@ function Cabins() {
           </Button>
         </div>
       </StyledCabins>
-      {showCreateCabinForm && <CreateCabinForm />}
+      {showCreateCabinForm && (
+        <CreateCabinForm handleCloseForm={handleCloseForm} />
+      )}
     </>
   );
 }
