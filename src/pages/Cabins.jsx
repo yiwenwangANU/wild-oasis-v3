@@ -5,14 +5,16 @@ import Button from "../ui/Button";
 import styled from "styled-components";
 import { useState } from "react";
 import CreateCabinForm from "../features/cabins/CreateCabinForm";
+import Modal from "../ui/Modal";
 const StyledCabins = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
 `;
 function Cabins() {
-  const [showCreateCabinForm, setShowCreateCabinForm] = useState(false);
-  const handleCloseForm = () => setShowCreateCabinForm(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const handleCloseModal = () => setIsOpen(false);
+  const handleOpenModal = () => setIsOpen(true);
   return (
     <>
       <StyledCabins>
@@ -22,14 +24,12 @@ function Cabins() {
         </Row>
         <CabinTable />
         <div>
-          <Button onClick={() => setShowCreateCabinForm(!showCreateCabinForm)}>
-            Add new cabin
-          </Button>
+          <Button onClick={() => handleOpenModal()}>Add new cabin</Button>
         </div>
+        <Modal isOpen={isOpen} handleCloseModal={handleCloseModal}>
+          <CreateCabinForm handleCloseModal={handleCloseModal} />
+        </Modal>
       </StyledCabins>
-      {showCreateCabinForm && (
-        <CreateCabinForm handleCloseForm={handleCloseForm} />
-      )}
     </>
   );
 }

@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+import { HiX } from "react-icons/hi";
 import styled from "styled-components";
 
 const StyledModal = styled.div`
@@ -48,3 +50,30 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+
+function Modal({ children, isOpen, handleCloseModal }) {
+  const modalRef = useRef();
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target))
+        handleCloseModal();
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [handleCloseModal]);
+
+  if (!isOpen) return;
+  else
+    return (
+      <Overlay>
+        <StyledModal ref={modalRef}>
+          <Button onClick={() => handleCloseModal()}>
+            <HiX />
+          </Button>
+          {children}
+        </StyledModal>
+      </Overlay>
+    );
+}
+
+export default Modal;

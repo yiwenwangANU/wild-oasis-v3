@@ -46,7 +46,7 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm({ cabin = {}, handleCloseForm }) {
+function CreateCabinForm({ cabin = {}, handleCloseModal }) {
   const editMode =
     Object.keys(cabin).length !== 0 || cabin.constructor !== Object;
 
@@ -71,9 +71,9 @@ function CreateCabinForm({ cabin = {}, handleCloseForm }) {
   useEffect(() => {
     if (createSuccess || editSuccess) {
       reset();
-      handleCloseForm();
+      handleCloseModal();
     }
-  }, [createSuccess, editSuccess, reset, handleCloseForm]);
+  }, [createSuccess, editSuccess, reset, handleCloseModal]);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -164,7 +164,7 @@ function CreateCabinForm({ cabin = {}, handleCloseForm }) {
           $variation="secondary"
           type="reset"
           disabled={isCreating || isEditing}
-          onClick={() => handleCloseForm()}
+          onClick={() => handleCloseModal()}
         >
           Cancel
         </Button>
