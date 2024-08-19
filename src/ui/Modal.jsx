@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { HiX } from "react-icons/hi";
 import styled from "styled-components";
 
@@ -26,7 +26,7 @@ const Overlay = styled.div`
   transition: all 0.5s;
 `;
 
-const Button = styled.button`
+const CloseButton = styled.button`
   background: none;
   border: none;
   padding: 0.4rem;
@@ -51,29 +51,56 @@ const Button = styled.button`
   }
 `;
 
-function Modal({ children, isOpen, handleCloseModal }) {
-  const modalRef = useRef();
+const modalContext = createContext();
+
+function Modal({ children }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleCloseModal = () => setIsOpen(false);
+  const handleOpenModal = () => setIsOpen(true);
+
+  return (
+    <modalContext.Provider
+      value={{ isOpen, handleCloseModal, handleOpenModal }}
+    >
+      {children}
+    </modalContext.Provider>
+  );
+}
+
+const Open = ({ children }) => {
+  const { handleOpenModal } = useContext(modalContext);
+  return <div onClick={() => handleOpenModal()}>{children}</div>;
+};
+
+const Window = ({ children }) => {
+  const { isOpen, handleCloseModal } = useContext(modalContext);
+
+  const modalref = useRef();
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target))
+    const handleOutsideClick = (event) => {
+      if (modalref.current && !modalref.current.contains(event.target))
         handleCloseModal();
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [handleCloseModal]);
 
   if (!isOpen) return;
   else
     return (
       <Overlay>
-        <StyledModal ref={modalRef}>
-          <Button onClick={() => handleCloseModal()}>
+        <StyledModal ref={modalref}>
+          <CloseButton onClick={() => handleCloseModal()}>
             <HiX />
-          </Button>
+          </CloseButton>
           {children}
         </StyledModal>
       </Overlay>
     );
-}
+};
+
+Modal.Open = Open;
+Modal.Window = Window;
 
 export default Modal;
+export { modalContext };

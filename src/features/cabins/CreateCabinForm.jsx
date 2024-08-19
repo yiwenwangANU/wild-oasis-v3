@@ -7,9 +7,9 @@ import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import { useForm } from "react-hook-form";
 import useCreateCabin from "./useCreateCabin";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import useEditCabin from "./useEditCabin";
-
+import { modalContext } from "../../ui/Modal";
 const FormRow = styled.div`
   display: grid;
   align-items: center;
@@ -46,7 +46,7 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function CreateCabinForm({ cabin = {}, handleCloseModal }) {
+function CreateCabinForm({ cabin = {} }) {
   const editMode =
     Object.keys(cabin).length !== 0 || cabin.constructor !== Object;
 
@@ -60,6 +60,7 @@ function CreateCabinForm({ cabin = {}, handleCloseModal }) {
 
   const { createCabin, isCreating, createSuccess } = useCreateCabin();
   const { editCabin, isEditing, editSuccess } = useEditCabin();
+  const { handleCloseModal } = useContext(modalContext);
 
   let onSubmit;
   if (!editMode) {

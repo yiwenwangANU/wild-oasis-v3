@@ -2,7 +2,6 @@ import styled from "styled-components";
 import useDeleteCabin from "./useDeleteCabin";
 import { HiPencil, HiTrash } from "react-icons/hi";
 import { HiSquare2Stack } from "react-icons/hi2";
-import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
 import useDuplicateCabin from "./useDuplicateCabin";
 import Modal from "../../ui/Modal";
@@ -49,17 +48,15 @@ function CabinRow({ cabin }) {
   const { id, image, name, maxCapacity, regularPrice, discount } = cabin;
   const { isDeleting, deleteCabin } = useDeleteCabin();
   const { isDuplicating, duplicateCabin } = useDuplicateCabin();
-  const [isOpen, setIsOpen] = useState(false);
 
   const handlePrice = (price) => `$${parseFloat(price).toFixed(2)}`;
   const handleDiscount = (discount) => {
     if (+discount <= 0) return "--";
     else return handlePrice(discount);
   };
-  const handleCloseModal = () => setIsOpen(false);
-  const handleOpenModal = () => setIsOpen(true);
+
   return (
-    <>
+    <Modal>
       <TableRow>
         <Img src={image} />
         <Cabin>{name}</Cabin>
@@ -73,9 +70,11 @@ function CabinRow({ cabin }) {
           >
             <HiSquare2Stack />
           </button>
-          <button onClick={() => handleOpenModal()}>
-            <HiPencil />
-          </button>
+          <Modal.Open>
+            <button>
+              <HiPencil />
+            </button>
+          </Modal.Open>
           <button
             onClick={() => deleteCabin(id)}
             disabled={isDuplicating || isDeleting}
@@ -84,10 +83,10 @@ function CabinRow({ cabin }) {
           </button>
         </div>
       </TableRow>
-      <Modal isOpen={isOpen} handleCloseModal={handleCloseModal}>
-        <CreateCabinForm cabin={cabin} handleCloseModal={handleCloseModal} />
-      </Modal>
-    </>
+      <Modal.Window>
+        <CreateCabinForm cabin={cabin} />
+      </Modal.Window>
+    </Modal>
   );
 }
 
