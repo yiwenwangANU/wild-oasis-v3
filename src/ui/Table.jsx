@@ -39,9 +39,9 @@ const StyledRow = styled.div`
 
 const tableContext = createContext();
 
-function Table({ children, columns }) {
+function Table({ children, columns, data, render }) {
   return (
-    <tableContext.Provider value={{ columns }}>
+    <tableContext.Provider value={{ columns, data, render }}>
       <StyledTable>{children}</StyledTable>
     </tableContext.Provider>
   );
@@ -52,12 +52,18 @@ function TableHeader({ children }) {
   return <StyledHeader columns={columns}>{children}</StyledHeader>;
 }
 
+function TableBody() {
+  const { data, render } = useContext(tableContext);
+  return data.map(render);
+}
+
 function TableRow({ children }) {
   const { columns } = useContext(tableContext);
   return <StyledRow columns={columns}>{children}</StyledRow>;
 }
 
 Table.TableHeader = TableHeader;
+Table.TableBody = TableBody;
 Table.TableRow = TableRow;
 
 export default Table;

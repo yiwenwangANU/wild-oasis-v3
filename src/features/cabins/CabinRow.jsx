@@ -6,7 +6,6 @@ import CreateCabinForm from "./CreateCabinForm";
 import useDuplicateCabin from "./useDuplicateCabin";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
-import Table from "../../ui/Table";
 
 const Img = styled.img`
   display: block;
@@ -48,31 +47,30 @@ function CabinRow({ cabin }) {
 
   return (
     <Modal>
-      <Table.TableRow>
-        <Img src={image} />
-        <Cabin>{name}</Cabin>
-        <div>Fit up to {maxCapacity} guests</div>
-        <Price>{handlePrice(regularPrice)}</Price>
-        <Discount>{handleDiscount(discount)}</Discount>
-        <div>
-          <button
-            onClick={() => duplicateCabin(cabin)}
-            disabled={isDuplicating || isDeleting}
-          >
-            <HiSquare2Stack />
+      <Img src={image} />
+      <Cabin>{name}</Cabin>
+      <div>Fit up to {maxCapacity} guests</div>
+      <Price>{handlePrice(regularPrice)}</Price>
+      <Discount>{handleDiscount(discount)}</Discount>
+      <div>
+        <button
+          onClick={() => duplicateCabin(cabin)}
+          disabled={isDuplicating || isDeleting}
+        >
+          <HiSquare2Stack />
+        </button>
+        <Modal.Open name="editCabin">
+          <button>
+            <HiPencil />
           </button>
-          <Modal.Open name="editCabin">
-            <button>
-              <HiPencil />
-            </button>
-          </Modal.Open>
-          <Modal.Open name="deleteCabin">
-            <button disabled={isDuplicating || isDeleting}>
-              <HiTrash />
-            </button>
-          </Modal.Open>
-        </div>
-      </Table.TableRow>
+        </Modal.Open>
+        <Modal.Open name="deleteCabin">
+          <button disabled={isDuplicating || isDeleting}>
+            <HiTrash />
+          </button>
+        </Modal.Open>
+      </div>
+
       <Modal.Window name="editCabin">
         <CreateCabinForm cabin={cabin} />
       </Modal.Window>
