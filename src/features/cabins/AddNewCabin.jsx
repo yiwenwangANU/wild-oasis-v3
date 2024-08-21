@@ -5,7 +5,7 @@ import CreateCabinForm from "./CreateCabinForm";
 function AddNewCabin() {
   return (
     <Modal>
-      <Modal.Open>
+      <Modal.Open variant="button">
         <Button>Add new cabin</Button>
       </Modal.Open>
       <Modal.Window>

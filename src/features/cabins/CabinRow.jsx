@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import useDeleteCabin from "./useDeleteCabin";
-import { HiPencil, HiTrash } from "react-icons/hi";
+import { HiDotsVertical, HiPencil, HiTrash } from "react-icons/hi";
 import { HiSquare2Stack } from "react-icons/hi2";
 import CreateCabinForm from "./CreateCabinForm";
 import useDuplicateCabin from "./useDuplicateCabin";
 import Modal from "../../ui/Modal";
 import ConfirmDelete from "../../ui/ConfirmDelete";
+import Menus from "../../ui/Menus";
 
 const Img = styled.img`
   display: block;
@@ -53,7 +54,36 @@ function CabinRow({ cabin }) {
       <Price>{handlePrice(regularPrice)}</Price>
       <Discount>{handleDiscount(discount)}</Discount>
       <div>
-        <button
+        <Menus>
+          <Menus.MenusOpen id={id}>
+            <HiDotsVertical />
+          </Menus.MenusOpen>
+          <Menus.MenusList id={id}>
+            <div
+              onClick={() => duplicateCabin(cabin)}
+              disabled={isDuplicating || isDeleting}
+            >
+              <Menus.MenusItem>
+                <HiSquare2Stack /> <div>Duplicate</div>
+              </Menus.MenusItem>
+            </div>
+
+            <Modal.Open name="editCabin" variant="line">
+              <Menus.MenusItem>
+                <HiPencil /> Edit
+              </Menus.MenusItem>
+            </Modal.Open>
+
+            <Modal.Open name="deleteCabin" variant="line">
+              <div disabled={isDuplicating || isDeleting}>
+                <Menus.MenusItem>
+                  <HiTrash /> Delete
+                </Menus.MenusItem>
+              </div>
+            </Modal.Open>
+          </Menus.MenusList>
+        </Menus>
+        {/* <button
           onClick={() => duplicateCabin(cabin)}
           disabled={isDuplicating || isDeleting}
         >
@@ -68,7 +98,7 @@ function CabinRow({ cabin }) {
           <button disabled={isDuplicating || isDeleting}>
             <HiTrash />
           </button>
-        </Modal.Open>
+        </Modal.Open> */}
       </div>
 
       <Modal.Window name="editCabin">

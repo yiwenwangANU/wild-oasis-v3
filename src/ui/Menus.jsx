@@ -1,3 +1,4 @@
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const StyledMenu = styled.div`
@@ -7,12 +8,17 @@ const StyledMenu = styled.div`
 `;
 
 const StyledToggle = styled.button`
+  width: 100%;
   background: none;
   border: none;
-  padding: 0.4rem;
+  margin: 0;
+  padding: 1rem 2rem;
   border-radius: var(--border-radius-sm);
-  transform: translateX(0.8rem);
   transition: all 0.2s;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
 
   &:hover {
     background-color: var(--color-grey-100);
@@ -27,21 +33,22 @@ const StyledToggle = styled.button`
 
 const StyledList = styled.ul`
   position: fixed;
-
+  top: 50%;
+  left: 50%;
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-md);
   border-radius: var(--border-radius-md);
-
-  right: ${(props) => props.position.x}px;
-  top: ${(props) => props.position.y}px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 `;
 
 const StyledButton = styled.button`
-  width: 100%;
+  width: fit-content;
   text-align: left;
   background: none;
   border: none;
-  padding: 1.2rem 2.4rem;
+  padding: 1.2rem 1.2rem;
   font-size: 1.4rem;
   transition: all 0.2s;
 
@@ -60,3 +67,58 @@ const StyledButton = styled.button`
     transition: all 0.3s;
   }
 `;
+
+const menusContext = createContext();
+
+function Menus({ children }) {
+  const [menuId, setMenuId] = useState("");
+  const handleOpenMenu = (id) => {
+    setMenuId(id);
+  };
+  const handleCloseMenu = () => {
+    setMenuId("");
+  };
+  return (
+    <menusContext.Provider value={{ menuId, handleOpenMenu, handleCloseMenu }}>
+      <StyledMenu>{children}</StyledMenu>
+    </menusContext.Provider>
+  );
+}
+
+function MenusOpen({ children, id }) {
+  const { handleOpenMenu } = useContext(menusContext);
+  return (
+    <StyledButton onClick={() => handleOpenMenu(id)}>{children}</StyledButton>
+  );
+}
+
+function MenusList({ children, id }) {
+  const { menuId, handleCloseMenu } = useContext(menusContext);
+  const menusListRef = useRef();
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (menusListRef.current && !menusListRef.current.contains(event.target))
+        handleCloseMenu(id);
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [handleCloseMenu, id]);
+
+  if (menuId !== id) return;
+  else return <StyledList ref={menusListRef}>{children}</StyledList>;
+}
+
+function MenusItem({ children }) {
+  const { handleCloseMenu, menuId } = useContext(menusContext);
+  return (
+    <StyledToggle onClick={() => handleCloseMenu(menuId)}>
+      {children}
+    </StyledToggle>
+  );
+}
+
+Menus.MenusOpen = MenusOpen;
+Menus.MenusList = MenusList;
+Menus.MenusItem = MenusItem;
+
+export default Menus;

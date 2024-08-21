@@ -26,6 +26,14 @@ const Overlay = styled.div`
   transition: all 0.5s;
 `;
 
+const StyledOpen = styled.div`
+  width: ${(props) =>
+    props.variant === "line"
+      ? "100%"
+      : props.variant === "button"
+      ? "fit-content"
+      : "auto"};
+`;
 const CloseButton = styled.button`
   background: none;
   border: none;
@@ -65,9 +73,13 @@ function Modal({ children }) {
   );
 }
 
-const Open = ({ children, name }) => {
+const Open = ({ children, name, variant }) => {
   const { handleOpenModal } = useContext(modalContext);
-  return <div onClick={() => handleOpenModal(name)}>{children}</div>;
+  return (
+    <StyledOpen variant={variant} onClick={() => handleOpenModal(name)}>
+      {children}
+    </StyledOpen>
+  );
 };
 
 const Window = ({ children, name }) => {
