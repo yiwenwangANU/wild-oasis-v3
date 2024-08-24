@@ -31,6 +31,7 @@ const StyledRow = styled.div`
   column-gap: 2.4rem;
   align-items: center;
   padding: 1.4rem 2.4rem;
+  transition: none;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-grey-100);
@@ -54,6 +55,7 @@ function TableHeader({ children }) {
 
 function TableBody() {
   const { data, render } = useContext(tableContext);
+
   return data.map(render);
 }
 
