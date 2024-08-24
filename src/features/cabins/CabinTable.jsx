@@ -11,7 +11,7 @@ function CabinTable() {
       columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr"
       data={cabins}
       render={(cabin) => (
-        <Table.TableRow>
+        <Table.TableRow key={cabin.id}>
           <CabinRow key={cabin.id} cabin={cabin} />
         </Table.TableRow>
       )}

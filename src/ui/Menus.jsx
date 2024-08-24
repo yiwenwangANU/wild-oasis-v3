@@ -33,8 +33,6 @@ const StyledToggle = styled.button`
 
 const StyledList = styled.ul`
   position: fixed;
-  top: 50%;
-  left: 50%;
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-md);
   border-radius: var(--border-radius-md);
@@ -72,29 +70,55 @@ const menusContext = createContext();
 
 function Menus({ children }) {
   const [menuId, setMenuId] = useState("");
+  const openRef = useRef();
   const handleOpenMenu = (id) => {
     setMenuId(id);
   };
   const handleCloseMenu = () => {
     setMenuId("");
   };
+
   return (
-    <menusContext.Provider value={{ menuId, handleOpenMenu, handleCloseMenu }}>
+    <menusContext.Provider
+      value={{
+        menuId,
+        openRef,
+        handleOpenMenu,
+        handleCloseMenu,
+      }}
+    >
       <StyledMenu>{children}</StyledMenu>
     </menusContext.Provider>
   );
 }
 
 function MenusOpen({ children, id }) {
-  const { handleOpenMenu } = useContext(menusContext);
+  const { openRef, handleOpenMenu } = useContext(menusContext);
   return (
-    <StyledButton onClick={() => handleOpenMenu(id)}>{children}</StyledButton>
+    <StyledButton ref={openRef} onClick={() => handleOpenMenu(id)}>
+      {children}
+    </StyledButton>
   );
 }
 
 function MenusList({ children, id }) {
-  const { menuId, handleCloseMenu } = useContext(menusContext);
+  const { menuId, openRef, handleCloseMenu } = useContext(menusContext);
   const menusListRef = useRef();
+  const [offset] = useState({ top: 20, left: 20 });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (openRef.current && menusListRef.current && menuId === id) {
+        const rect = openRef.current.getBoundingClientRect();
+        menusListRef.current.style.top = `${rect.top + offset.top}px`;
+        menusListRef.current.style.left = `${rect.left + offset.left}px`;
+      }
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, true);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [id, menuId, offset, openRef]);
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (menusListRef.current && !menusListRef.current.contains(event.target))
