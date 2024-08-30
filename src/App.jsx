@@ -19,6 +19,7 @@ import PageNotFound from "./pages/PageNotFound";
 import GlobalStyles from "./styles/GlobalStyles";
 import { Toaster } from "react-hot-toast";
 import Booking from "./pages/Booking";
+import Checkin from "./pages/Checkin";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ function App() {
           element: <Bookings />,
         },
         { path: "/booking/:bookingId", element: <Booking /> },
+        { path: "/checkin/:checkInId", element: <Checkin /> },
         {
           path: "/cabins",
           element: <Cabins />,

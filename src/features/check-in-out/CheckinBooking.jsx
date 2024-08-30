@@ -8,6 +8,11 @@ import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
 
 import { useMoveBack } from "../../hooks/useMoveBack";
+import { useParams } from "react-router-dom";
+import useGetBooking from "../bookings/useGetBooking";
+import Spinner from "../../ui/Spinner";
+import { formatCurrency } from "../../utils/helpers";
+import Checkbox from "../../ui/Checkbox";
 
 const Box = styled.div`
   /* Box */
@@ -19,12 +24,12 @@ const Box = styled.div`
 
 function CheckinBooking() {
   const moveBack = useMoveBack();
-
-  const booking = {};
-
+  const { checkInId } = useParams();
+  const { booking, isPending } = useGetBooking(checkInId);
+  if (isPending) return <Spinner />;
   const {
     id: bookingId,
-    guests,
+    guests: { fullName: guestName, email },
     totalPrice,
     numGuests,
     hasBreakfast,
@@ -36,15 +41,20 @@ function CheckinBooking() {
   return (
     <>
       <Row type="horizontal">
-        <Heading as="h1">Check in booking #{bookingId}</Heading>
+        <Heading as="h1">Check in booking #{checkInId}</Heading>
         <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
       </Row>
 
       <BookingDataBox booking={booking} />
-
+      <Box>
+        <Checkbox>
+          I confirm that {guestName} has paid the total amount of{" "}
+          {formatCurrency(totalPrice)}
+        </Checkbox>
+      </Box>
       <ButtonGroup>
         <Button onClick={handleCheckin}>Check in booking #{bookingId}</Button>
-        <Button variation="secondary" onClick={moveBack}>
+        <Button $variation="secondary" onClick={moveBack}>
           Back
         </Button>
       </ButtonGroup>
