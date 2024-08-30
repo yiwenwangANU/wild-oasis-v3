@@ -8,6 +8,7 @@ import { formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus";
 import { HiClipboardCheck, HiDotsVertical } from "react-icons/hi";
 import { HiEye } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -53,6 +54,7 @@ function BookingRow({
     "checked-in": "green",
     "checked-out": "silver",
   };
+  const navigate = useNavigate();
 
   return (
     <>
@@ -85,7 +87,11 @@ function BookingRow({
             <HiDotsVertical />
           </Menus.MenusOpen>
           <Menus.MenusList id={bookingId}>
-            <Menus.MenusItem>
+            <Menus.MenusItem
+              onClick={() => {
+                navigate(`/booking/${bookingId}`);
+              }}
+            >
               <HiEye /> See Detail
             </Menus.MenusItem>
 

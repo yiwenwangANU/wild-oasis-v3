@@ -132,10 +132,15 @@ function MenusList({ children, id }) {
   else return <StyledList ref={menusListRef}>{children}</StyledList>;
 }
 
-function MenusItem({ children }) {
+function MenusItem({ children, onClick }) {
   const { handleCloseMenu, menuId } = useContext(menusContext);
   return (
-    <StyledToggle onClick={() => handleCloseMenu(menuId)}>
+    <StyledToggle
+      onClick={() => {
+        onClick();
+        handleCloseMenu(menuId);
+      }}
+    >
       {children}
     </StyledToggle>
   );

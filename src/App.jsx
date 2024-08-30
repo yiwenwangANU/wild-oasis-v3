@@ -18,6 +18,7 @@ import PageNotFound from "./pages/PageNotFound";
 
 import GlobalStyles from "./styles/GlobalStyles";
 import { Toaster } from "react-hot-toast";
+import Booking from "./pages/Booking";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ function App() {
           path: "/bookings",
           element: <Bookings />,
         },
+        { path: "/booking/:bookingId", element: <Booking /> },
         {
           path: "/cabins",
           element: <Cabins />,

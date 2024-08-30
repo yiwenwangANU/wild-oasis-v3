@@ -16,13 +16,22 @@ const StyledMain = styled.main`
   padding: 4rem 4.8rem 6.4rem;
   overflow: auto;
 `;
+const StyledContainer = styled.div`
+  max-width: 120rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+`;
 function Applayout() {
   return (
     <StyledApplayout>
       <Sidebar />
       <Hearder />
       <StyledMain>
-        <Outlet />
+        <StyledContainer>
+          <Outlet />
+        </StyledContainer>
       </StyledMain>
     </StyledApplayout>
   );
