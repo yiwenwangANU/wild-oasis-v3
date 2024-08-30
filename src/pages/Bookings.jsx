@@ -5,6 +5,8 @@ import Row from "../ui/Row";
 import SortBy from "../ui/SortBy";
 import BookingTable from "../features/bookings/BookingTable";
 const StyledBookings = styled.div`
+  max-width: 120rem;
+  margin: 0px auto;
   display: flex;
   flex-direction: column;
   gap: 2.4rem;

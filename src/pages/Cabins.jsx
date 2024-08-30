@@ -6,6 +6,8 @@ import AddNewCabin from "../features/cabins/AddNewCabin";
 import Filter from "../ui/Filter";
 import SortBy from "../ui/SortBy";
 const StyledCabins = styled.div`
+  max-width: 120rem;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 2.4rem;

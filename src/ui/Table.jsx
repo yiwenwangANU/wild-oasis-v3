@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
-
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
@@ -30,7 +29,7 @@ const StyledRow = styled.div`
   grid-template-columns: ${(props) => props.$columns};
   column-gap: 2.4rem;
   align-items: center;
-  padding: 1.4rem 2.4rem;
+  padding: 1rem 2.4rem;
   transition: none;
 
   &:not(:last-child) {
