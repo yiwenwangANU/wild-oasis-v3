@@ -35,7 +35,7 @@ function CabinTable() {
 
   return (
     <Table
-      columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr"
+      $columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr"
       data={sortedCabins}
       render={(cabin) => (
         <Table.TableRow key={cabin.id}>

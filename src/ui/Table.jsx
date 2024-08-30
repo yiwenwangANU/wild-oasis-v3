@@ -12,7 +12,7 @@ const StyledTable = styled.div`
 
 const StyledHeader = styled.header`
   display: grid;
-  grid-template-columns: ${(props) => props.columns};
+  grid-template-columns: ${(props) => props.$columns};
   column-gap: 2.4rem;
   align-items: center;
 
@@ -27,7 +27,7 @@ const StyledHeader = styled.header`
 
 const StyledRow = styled.div`
   display: grid;
-  grid-template-columns: ${(props) => props.columns};
+  grid-template-columns: ${(props) => props.$columns};
   column-gap: 2.4rem;
   align-items: center;
   padding: 1.4rem 2.4rem;
@@ -40,17 +40,17 @@ const StyledRow = styled.div`
 
 const tableContext = createContext();
 
-function Table({ children, columns, data, render }) {
+function Table({ children, $columns, data, render }) {
   return (
-    <tableContext.Provider value={{ columns, data, render }}>
+    <tableContext.Provider value={{ $columns, data, render }}>
       <StyledTable>{children}</StyledTable>
     </tableContext.Provider>
   );
 }
 
 function TableHeader({ children }) {
-  const { columns } = useContext(tableContext);
-  return <StyledHeader columns={columns}>{children}</StyledHeader>;
+  const { $columns } = useContext(tableContext);
+  return <StyledHeader $columns={$columns}>{children}</StyledHeader>;
 }
 
 function TableBody() {
@@ -60,8 +60,8 @@ function TableBody() {
 }
 
 function TableRow({ children }) {
-  const { columns } = useContext(tableContext);
-  return <StyledRow columns={columns}>{children}</StyledRow>;
+  const { $columns } = useContext(tableContext);
+  return <StyledRow $columns={$columns}>{children}</StyledRow>;
 }
 
 Table.TableHeader = TableHeader;

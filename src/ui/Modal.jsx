@@ -28,9 +28,9 @@ const Overlay = styled.div`
 
 const StyledOpen = styled.div`
   width: ${(props) =>
-    props.variant === "line"
+    props.$variant === "line"
       ? "100%"
-      : props.variant === "button"
+      : props.$variant === "button"
       ? "fit-content"
       : "auto"};
 `;
@@ -73,10 +73,10 @@ function Modal({ children }) {
   );
 }
 
-const Open = ({ children, name, variant }) => {
+const Open = ({ children, name, $variant }) => {
   const { handleOpenModal } = useContext(modalContext);
   return (
-    <StyledOpen variant={variant} onClick={() => handleOpenModal(name)}>
+    <StyledOpen $variant={$variant} onClick={() => handleOpenModal(name)}>
       {children}
     </StyledOpen>
   );
