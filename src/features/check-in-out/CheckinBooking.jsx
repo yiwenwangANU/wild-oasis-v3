@@ -13,6 +13,8 @@ import useGetBooking from "../bookings/useGetBooking";
 import Spinner from "../../ui/Spinner";
 import { formatCurrency } from "../../utils/helpers";
 import Checkbox from "../../ui/Checkbox";
+import { useState } from "react";
+import useCheckIn from "./useCheckIn";
 
 const Box = styled.div`
   /* Box */
@@ -25,18 +27,22 @@ const Box = styled.div`
 function CheckinBooking() {
   const moveBack = useMoveBack();
   const { checkInId } = useParams();
-  const { booking, isPending } = useGetBooking(checkInId);
-  if (isPending) return <Spinner />;
+  const { booking, isPending: isGettingBooking } = useGetBooking(checkInId);
+  const [confirmPayment, setConfirmPayment] = useState(false);
+  const { checkin, isPending: isCheckingIn } = useCheckIn(checkInId);
+  if (isGettingBooking) return <Spinner />;
   const {
     id: bookingId,
-    guests: { fullName: guestName, email },
+    guests: { fullName: guestName },
     totalPrice,
-    numGuests,
-    hasBreakfast,
-    numNights,
   } = booking;
 
-  function handleCheckin() {}
+  function handleConfirmPayment() {
+    setConfirmPayment(!confirmPayment);
+  }
+  function handleCheckin() {
+    checkin();
+  }
 
   return (
     <>
@@ -47,14 +53,23 @@ function CheckinBooking() {
 
       <BookingDataBox booking={booking} />
       <Box>
-        <Checkbox>
+        <Checkbox onChange={handleConfirmPayment} checked={confirmPayment}>
           I confirm that {guestName} has paid the total amount of{" "}
           {formatCurrency(totalPrice)}
         </Checkbox>
       </Box>
       <ButtonGroup>
-        <Button onClick={handleCheckin}>Check in booking #{bookingId}</Button>
-        <Button $variation="secondary" onClick={moveBack}>
+        <Button
+          onClick={handleCheckin}
+          disabled={!confirmPayment || isCheckingIn}
+        >
+          Check in booking #{bookingId}
+        </Button>
+        <Button
+          $variation="secondary"
+          disabled={isCheckingIn}
+          onClick={moveBack}
+        >
           Back
         </Button>
       </ButtonGroup>
