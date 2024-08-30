@@ -83,22 +83,6 @@ function CabinRow({ cabin }) {
             </Modal.Open>
           </Menus.MenusList>
         </Menus>
-        {/* <button
-          onClick={() => duplicateCabin(cabin)}
-          disabled={isDuplicating || isDeleting}
-        >
-          <HiSquare2Stack />
-        </button>
-        <Modal.Open name="editCabin">
-          <button>
-            <HiPencil />
-          </button>
-        </Modal.Open>
-        <Modal.Open name="deleteCabin">
-          <button disabled={isDuplicating || isDeleting}>
-            <HiTrash />
-          </button>
-        </Modal.Open> */}
       </div>
 
       <Modal.Window name="editCabin">

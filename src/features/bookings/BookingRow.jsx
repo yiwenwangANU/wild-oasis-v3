@@ -5,6 +5,9 @@ import Tag from "../../ui/Tag";
 
 import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
+import Menus from "../../ui/Menus";
+import { HiClipboardCheck, HiDotsVertical } from "react-icons/hi";
+import { HiEye } from "react-icons/hi2";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -35,6 +38,7 @@ const Amount = styled.div`
 
 function BookingRow({
   booking: {
+    id: bookingId,
     startDate,
     endDate,
     numNights,
@@ -75,6 +79,22 @@ function BookingRow({
       <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
 
       <Amount>{formatCurrency(totalPrice)}</Amount>
+      <div>
+        <Menus>
+          <Menus.MenusOpen id={bookingId}>
+            <HiDotsVertical />
+          </Menus.MenusOpen>
+          <Menus.MenusList id={bookingId}>
+            <Menus.MenusItem>
+              <HiEye /> See Detail
+            </Menus.MenusItem>
+
+            <Menus.MenusItem>
+              <HiClipboardCheck /> Check In
+            </Menus.MenusItem>
+          </Menus.MenusList>
+        </Menus>
+      </div>
     </>
   );
 }
