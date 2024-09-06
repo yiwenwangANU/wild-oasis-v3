@@ -95,9 +95,15 @@ function BookingRow({
               <HiEye /> See Detail
             </Menus.MenusItem>
 
-            <Menus.MenusItem>
-              <HiClipboardCheck /> Check In
-            </Menus.MenusItem>
+            {status === "unconfirmed" && (
+              <Menus.MenusItem
+                onClick={() => {
+                  navigate(`/checkin/${bookingId}`);
+                }}
+              >
+                <HiClipboardCheck /> Check In
+              </Menus.MenusItem>
+            )}
           </Menus.MenusList>
         </Menus>
       </div>

@@ -6,10 +6,10 @@ function useCheckIn(id) {
   const queryClient = useQueryClient();
   const { mutate: checkin, isPending } = useMutation({
     mutationFn: () => updateBooking(id, { status: "checked-in", isPaid: true }),
-    onSuccess: () => {
+    onSuccess: (data) => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["getBooking"] });
-      toast.success("Checked in Successfully.");
+      toast.success(`#${data.id} successfully checked in.`);
     },
     onError: () => {
       toast.error("Failed to checked in.");

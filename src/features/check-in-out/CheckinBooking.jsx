@@ -8,8 +8,9 @@ import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
 
 import { useMoveBack } from "../../hooks/useMoveBack";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useGetBooking from "../bookings/useGetBooking";
+
 import Spinner from "../../ui/Spinner";
 import { formatCurrency } from "../../utils/helpers";
 import Checkbox from "../../ui/Checkbox";
@@ -28,12 +29,18 @@ function CheckinBooking() {
   const moveBack = useMoveBack();
   const { checkInId } = useParams();
   const { booking, isPending: isGettingBooking } = useGetBooking(checkInId);
+
   const [confirmPayment, setConfirmPayment] = useState(false);
   const { checkin, isPending: isCheckingIn } = useCheckIn(checkInId);
+  const navigate = useNavigate();
   if (isGettingBooking) return <Spinner />;
   const {
     id: bookingId,
     guests: { fullName: guestName },
+    status,
+    hasBreakfast,
+    numNights,
+    numGuests,
     totalPrice,
   } = booking;
 
@@ -44,37 +51,46 @@ function CheckinBooking() {
     checkin();
   }
 
-  return (
-    <>
-      <Row type="horizontal">
-        <Heading as="h1">Check in booking #{checkInId}</Heading>
-        <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
-      </Row>
+  if (status !== "unconfirmed") navigate("/");
+  else
+    return (
+      <>
+        <Row type="horizontal">
+          <Heading as="h1">Check in booking #{checkInId}</Heading>
+          <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
+        </Row>
 
-      <BookingDataBox booking={booking} />
-      <Box>
-        <Checkbox onChange={handleConfirmPayment} checked={confirmPayment}>
-          I confirm that {guestName} has paid the total amount of{" "}
-          {formatCurrency(totalPrice)}
-        </Checkbox>
-      </Box>
-      <ButtonGroup>
-        <Button
-          onClick={handleCheckin}
-          disabled={!confirmPayment || isCheckingIn}
-        >
-          Check in booking #{bookingId}
-        </Button>
-        <Button
-          $variation="secondary"
-          disabled={isCheckingIn}
-          onClick={moveBack}
-        >
-          Back
-        </Button>
-      </ButtonGroup>
-    </>
-  );
+        <BookingDataBox booking={booking} />
+        {!hasBreakfast && (
+          <Box>
+            <Checkbox onChange={handleConfirmPayment} checked={confirmPayment}>
+              Want to add breakfast for {formatCurrency(numGuests * numNights)}?
+            </Checkbox>
+          </Box>
+        )}
+        <Box>
+          <Checkbox onChange={handleConfirmPayment} checked={confirmPayment}>
+            I confirm that {guestName} has paid the total amount of{" "}
+            {formatCurrency(totalPrice)}
+          </Checkbox>
+        </Box>
+        <ButtonGroup>
+          <Button
+            onClick={handleCheckin}
+            disabled={!confirmPayment || isCheckingIn}
+          >
+            Check in booking #{bookingId}
+          </Button>
+          <Button
+            $variation="secondary"
+            disabled={isCheckingIn}
+            onClick={moveBack}
+          >
+            Back
+          </Button>
+        </ButtonGroup>
+      </>
+    );
 }
 
 export default CheckinBooking;
