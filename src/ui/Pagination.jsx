@@ -1,5 +1,8 @@
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 
+const ITEMS_PER_PAGE = 10;
 const StyledPagination = styled.div`
   width: 100%;
   display: flex;
@@ -55,3 +58,32 @@ const PaginationButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
+function Pagination({ count }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get("page") || "1";
+  const handleNextPage = () => {
+    setSearchParams({ page: +page + 1 });
+  };
+  const handlePreviousPage = () => {
+    setSearchParams({ page: +page - 1 });
+  };
+  return (
+    <StyledPagination>
+      <P>Showing 1 to 10 of 410 results</P>
+      <Buttons>
+        <PaginationButton onClick={handlePreviousPage} disabled={+page <= 1}>
+          <HiChevronLeft /> Previous
+        </PaginationButton>
+        <PaginationButton
+          onClick={handleNextPage}
+          disabled={+page >= +count / +ITEMS_PER_PAGE}
+        >
+          Next <HiChevronRight />
+        </PaginationButton>
+      </Buttons>
+    </StyledPagination>
+  );
+}
+
+export default Pagination;

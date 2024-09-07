@@ -37,6 +37,9 @@ const StyledRow = styled.div`
   }
 `;
 
+const StyledFooter = styled.div`
+  padding: 1.6rem 2.4rem;
+`;
 const tableContext = createContext();
 
 function Table({ children, $columns, data, render }) {
@@ -63,8 +66,12 @@ function TableRow({ children }) {
   return <StyledRow $columns={$columns}>{children}</StyledRow>;
 }
 
+function TableFooter({ children }) {
+  return <StyledFooter>{children}</StyledFooter>;
+}
 Table.TableHeader = TableHeader;
 Table.TableBody = TableBody;
 Table.TableRow = TableRow;
+Table.TableFooter = TableFooter;
 
 export default Table;
