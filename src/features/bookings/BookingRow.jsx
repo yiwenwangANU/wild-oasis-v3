@@ -7,9 +7,12 @@ import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus";
 import { HiClipboardCheck, HiDotsVertical } from "react-icons/hi";
-import { HiEye } from "react-icons/hi2";
+import { HiEye, HiTrash } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import useCheckout from "../check-in-out/useCheckout";
+import useDeleteBooking from "./useDeleteBooking";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -57,7 +60,10 @@ function BookingRow({
   };
   const navigate = useNavigate();
   const { checkout } = useCheckout();
-
+  const { deleteBooking, isPending: isDeleteBooking } = useDeleteBooking();
+  const handleDeleteBooking = () => {
+    deleteBooking(bookingId);
+  };
   return (
     <>
       <Cabin>{cabinName}</Cabin>
@@ -83,7 +89,8 @@ function BookingRow({
       <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
 
       <Amount>{formatCurrency(totalPrice)}</Amount>
-      <div>
+
+      <Modal>
         <Menus>
           <Menus.MenusOpen id={bookingId}>
             <HiDotsVertical />
@@ -111,9 +118,21 @@ function BookingRow({
                 <HiClipboardCheck /> Check Out
               </Menus.MenusItem>
             )}
+            <Modal.Open>
+              <Menus.MenusItem>
+                <HiTrash /> Delete Booking
+              </Menus.MenusItem>
+            </Modal.Open>
           </Menus.MenusList>
         </Menus>
-      </div>
+        <Modal.Window>
+          <ConfirmDelete
+            resourceName={`Booking ${bookingId}`}
+            onConfirm={handleDeleteBooking}
+            disabled={isDeleteBooking}
+          />
+        </Modal.Window>
+      </Modal>
     </>
   );
 }
