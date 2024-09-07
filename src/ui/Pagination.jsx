@@ -70,7 +70,10 @@ function Pagination({ count }) {
   };
   return (
     <StyledPagination>
-      <P>Showing 1 to 10 of 410 results</P>
+      <P>
+        Showing {(page - 1) * ITEMS_PER_PAGE + 1} to{" "}
+        {Math.min(page * ITEMS_PER_PAGE, count)} of {count} results
+      </P>
       <Buttons>
         <PaginationButton onClick={handlePreviousPage} disabled={+page <= 1}>
           <HiChevronLeft /> Previous
