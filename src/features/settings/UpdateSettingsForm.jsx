@@ -16,7 +16,6 @@ function UpdateSettingsForm() {
   const { updateSettings, isPending: isUpdatingSettings } = useUpdateSettings();
   if (isGettingSettings) return <Spinner />;
   const onSubmit = (data) => {
-    console.log(data);
     updateSettings(data);
   };
   return (

@@ -8,7 +8,7 @@ import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
 
 import { useMoveBack } from "../../hooks/useMoveBack";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useGetBooking from "../bookings/useGetBooking";
 
 import Spinner from "../../ui/Spinner";
@@ -16,6 +16,8 @@ import { formatCurrency } from "../../utils/helpers";
 import Checkbox from "../../ui/Checkbox";
 import { useState } from "react";
 import useCheckIn from "./useCheckIn";
+import useGetSettings from "../settings/useGetSettings";
+import useAddBreakfast from "./useAddBreakfast";
 
 const Box = styled.div`
   /* Box */
@@ -31,9 +33,12 @@ function CheckinBooking() {
   const { booking, isPending: isGettingBooking } = useGetBooking(checkInId);
 
   const [confirmPayment, setConfirmPayment] = useState(false);
-  const { checkin, isPending: isCheckingIn } = useCheckIn(checkInId);
-  const navigate = useNavigate();
-  if (isGettingBooking) return <Spinner />;
+  const [confirmBreakfast, setConfirmBreakfast] = useState(false);
+  const { checkin, isPending: isCheckingIn } = useCheckIn();
+  const { addBreakfast, isPending: isAddBreakfast } = useAddBreakfast();
+  const { settings, isPending: isGetSettings } = useGetSettings();
+  if (isGettingBooking || isGetSettings) return <Spinner />;
+
   const {
     id: bookingId,
     guests: { fullName: guestName },
@@ -41,17 +46,21 @@ function CheckinBooking() {
     hasBreakfast,
     numNights,
     numGuests,
+    isPaid,
     totalPrice,
   } = booking;
-
+  const totalBreakfastPrice = numGuests * numNights * settings.breakfastPrice;
   function handleConfirmPayment() {
     setConfirmPayment(!confirmPayment);
   }
-  function handleCheckin() {
-    checkin();
+  function handleConfirmBreakfast() {
+    setConfirmBreakfast(!confirmBreakfast);
   }
-
-  if (status !== "unconfirmed") navigate("/");
+  function handleCheckin() {
+    if (confirmBreakfast) addBreakfast({ id: checkInId, totalBreakfastPrice });
+    checkin(checkInId);
+  }
+  if (status !== "unconfirmed") return null;
   else
     return (
       <>
@@ -63,27 +72,45 @@ function CheckinBooking() {
         <BookingDataBox booking={booking} />
         {!hasBreakfast && (
           <Box>
-            <Checkbox onChange={handleConfirmPayment} checked={confirmPayment}>
-              Want to add breakfast for {formatCurrency(numGuests * numNights)}?
+            <Checkbox
+              onChange={handleConfirmBreakfast}
+              checked={confirmBreakfast}
+              disabled={isCheckingIn || isAddBreakfast}
+            >
+              Want to add breakfast for {formatCurrency(totalBreakfastPrice)} ?
             </Checkbox>
           </Box>
         )}
-        <Box>
-          <Checkbox onChange={handleConfirmPayment} checked={confirmPayment}>
-            I confirm that {guestName} has paid the total amount of{" "}
-            {formatCurrency(totalPrice)}
-          </Checkbox>
-        </Box>
+        {!isPaid && (
+          <Box>
+            <Checkbox
+              onChange={handleConfirmPayment}
+              checked={confirmPayment}
+              disabled={isCheckingIn || isAddBreakfast}
+            >
+              I confirm that {guestName} has paid the total amount of{" "}
+              {hasBreakfast || confirmBreakfast
+                ? `${formatCurrency(
+                    totalPrice + totalBreakfastPrice
+                  )} (${formatCurrency(totalPrice)} + ${formatCurrency(
+                    totalBreakfastPrice
+                  )})`
+                : formatCurrency(totalPrice)}
+            </Checkbox>
+          </Box>
+        )}
         <ButtonGroup>
           <Button
             onClick={handleCheckin}
-            disabled={!confirmPayment || isCheckingIn}
+            disabled={
+              !isPaid && (!confirmPayment || isCheckingIn || isAddBreakfast)
+            }
           >
             Check in booking #{bookingId}
           </Button>
           <Button
             $variation="secondary"
-            disabled={isCheckingIn}
+            disabled={isCheckingIn || isAddBreakfast}
             onClick={moveBack}
           >
             Back
