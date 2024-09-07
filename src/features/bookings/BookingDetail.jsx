@@ -21,8 +21,6 @@ const HeadingGroup = styled.div`
 `;
 
 function BookingDetail() {
-  const status = "checked-in";
-
   const moveBack = useMoveBack();
 
   const statusToTagName = {

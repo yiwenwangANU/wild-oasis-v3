@@ -9,6 +9,7 @@ import Menus from "../../ui/Menus";
 import { HiClipboardCheck, HiDotsVertical } from "react-icons/hi";
 import { HiEye } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
+import useCheckout from "../check-in-out/useCheckout";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -55,6 +56,7 @@ function BookingRow({
     "checked-out": "silver",
   };
   const navigate = useNavigate();
+  const { checkout } = useCheckout();
 
   return (
     <>
@@ -102,6 +104,11 @@ function BookingRow({
                 }}
               >
                 <HiClipboardCheck /> Check In
+              </Menus.MenusItem>
+            )}
+            {status === "checked-in" && (
+              <Menus.MenusItem onClick={() => checkout(bookingId)}>
+                <HiClipboardCheck /> Check Out
               </Menus.MenusItem>
             )}
           </Menus.MenusList>
