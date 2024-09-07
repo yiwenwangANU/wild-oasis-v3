@@ -50,7 +50,9 @@ function BookingDetail() {
       <BookingDataBox booking={booking} />
 
       <ButtonGroup>
-        <Button onClick={handleCheckIn}>Check in</Button>
+        {booking.status === "unconfirmed" && (
+          <Button onClick={handleCheckIn}>Check in</Button>
+        )}
         <Button $variation="secondary" onClick={moveBack}>
           Back
         </Button>
