@@ -6,11 +6,14 @@ function useGetBookings() {
   const [searchParams] = useSearchParams();
   const filterValue = searchParams.get("status");
   const sortValue = searchParams.get("sortby");
-  const { data: bookings, isPending } = useQuery({
-    queryKey: ["getBookings", filterValue, sortValue],
-    queryFn: () => getBookings(filterValue, sortValue),
+  const pageValue = searchParams.get("page") || 1;
+  const { data, isPending } = useQuery({
+    queryKey: ["getBookings", filterValue, sortValue, pageValue],
+    queryFn: () => getBookings(filterValue, sortValue, pageValue),
   });
-  return { bookings, isPending };
+  const bookings = data?.data || [];
+  const count = data?.count || 0;
+  return { bookings, count, isPending };
 }
 
 export default useGetBookings;
